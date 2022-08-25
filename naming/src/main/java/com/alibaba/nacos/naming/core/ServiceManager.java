@@ -465,6 +465,7 @@ public class ServiceManager implements RecordListener<Service> {
         }
         service.validate();
 
+        // 添加服务和初始化
         putServiceAndInit(service);
         if (!local) {
             addOrReplaceService(service);
@@ -486,7 +487,8 @@ public class ServiceManager implements RecordListener<Service> {
         NamingUtils.checkInstanceIsLegal(instance);
         
         createEmptyService(namespaceId, serviceName, instance.isEphemeral());
-        
+
+        // 获取实例
         Service service = getService(namespaceId, serviceName);
         
         checkServiceIsNull(service, namespaceId, serviceName);
@@ -869,8 +871,10 @@ public class ServiceManager implements RecordListener<Service> {
     }
     
     private void putServiceAndInit(Service service) throws NacosException {
+        // 添加服务
         putService(service);
         service = getService(service.getNamespaceId(), service.getName());
+        // 服务初始化
         service.init();
         consistencyService
                 .listen(KeyBuilder.buildInstanceListKey(service.getNamespaceId(), service.getName(), true), service);

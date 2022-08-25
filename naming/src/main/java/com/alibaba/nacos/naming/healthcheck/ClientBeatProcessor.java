@@ -73,15 +73,19 @@ public class ClientBeatProcessor implements BeatProcessor {
         String clusterName = rsInfo.getCluster();
         int port = rsInfo.getPort();
         Cluster cluster = service.getClusterMap().get(clusterName);
+        // 1.获取所有实例
         List<Instance> instances = cluster.allIPs(true);
         
         for (Instance instance : instances) {
+            // 2. 判断IP和端口号
             if (instance.getIp().equals(ip) && instance.getPort() == port) {
                 if (Loggers.EVT_LOG.isDebugEnabled()) {
                     Loggers.EVT_LOG.debug("[CLIENT-BEAT] refresh beat: {}", rsInfo.toString());
                 }
+                // 3. 设置实例最后的使用时间
                 instance.setLastBeat(System.currentTimeMillis());
                 if (!instance.isMarked() && !instance.isHealthy()) {
+                    // 设置健康状态为true
                     instance.setHealthy(true);
                     Loggers.EVT_LOG
                             .info("service: {} {POS} {IP-ENABLED} valid: {}:{}@{}, region: {}, msg: client beat ok",

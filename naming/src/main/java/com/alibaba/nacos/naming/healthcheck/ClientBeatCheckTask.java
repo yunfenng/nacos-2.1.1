@@ -94,14 +94,17 @@ public class ClientBeatCheckTask implements BeatCheckTask {
             if (!getSwitchDomain().isHealthCheckEnabled()) {
                 return;
             }
-            
+
+            // 1. 获取实例
             List<Instance> instances = service.allIPs(true);
-            
+
+            // 2. 检查客户端实例最后使用时间是否超时
             // first set health status of instances:
             for (Instance instance : instances) {
                 if (System.currentTimeMillis() - instance.getLastBeat() > instance.getInstanceHeartBeatTimeOut()) {
                     if (!instance.isMarked()) {
                         if (instance.isHealthy()) {
+                            // 3. 如果超时15秒设置健康状态为false
                             instance.setHealthy(false);
                             Loggers.EVT_LOG
                                     .info("{POS} {IP-DISABLED} valid: {}:{}@{}@{}, region: {}, msg: client timeout after {}, last beat: {}",
@@ -124,9 +127,10 @@ public class ClientBeatCheckTask implements BeatCheckTask {
                 if (instance.isMarked()) {
                     continue;
                 }
-                
+
+                // 4. 检查是否超过30秒
                 if (System.currentTimeMillis() - instance.getLastBeat() > instance.getIpDeleteTimeout()) {
-                    // delete instance
+                    // 5. 如果超过30秒则删除实例 delete instance
                     Loggers.SRV_LOG.info("[AUTO-DELETE-IP] service: {}, ip: {}", service.getName(),
                             JacksonUtils.toJson(instance));
                     deleteIp(instance);

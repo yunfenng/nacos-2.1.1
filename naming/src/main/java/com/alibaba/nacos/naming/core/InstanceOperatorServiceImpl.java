@@ -113,6 +113,7 @@ public class InstanceOperatorServiceImpl implements InstanceOperator {
     @Override
     public void registerInstance(String namespaceId, String serviceName, Instance instance) throws NacosException {
         com.alibaba.nacos.naming.core.Instance coreInstance = parseInstance(instance);
+        // 注册实例
         serviceManager.registerInstance(namespaceId, serviceName, coreInstance);
     }
     
@@ -254,6 +255,7 @@ public class InstanceOperatorServiceImpl implements InstanceOperator {
     @Override
     public Instance getInstance(String namespaceId, String serviceName, String cluster, String ip, int port)
             throws NacosException {
+        // 获取服务
         Service service = serviceManager.getService(namespaceId, serviceName);
         
         serviceManager.checkServiceIsNull(service, namespaceId, serviceName);
@@ -295,7 +297,7 @@ public class InstanceOperatorServiceImpl implements InstanceOperator {
             instance = parseInstance(builder.setBeatInfo(clientBeat).setServiceName(serviceName).build());
             serviceManager.registerInstance(namespaceId, serviceName, instance);
         }
-        
+        // 获取服务
         Service service = serviceManager.getService(namespaceId, serviceName);
         
         serviceManager.checkServiceIsNull(service, namespaceId, serviceName);
@@ -306,6 +308,7 @@ public class InstanceOperatorServiceImpl implements InstanceOperator {
             clientBeat.setPort(port);
             clientBeat.setCluster(cluster);
         }
+        // 处理客户端心跳
         service.processClientBeat(clientBeat);
         return NamingResponseCode.OK;
     }

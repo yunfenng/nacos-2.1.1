@@ -117,7 +117,8 @@ public class InstanceController {
         
         final Instance instance = HttpRequestInstanceBuilder.newBuilder()
                 .setDefaultInstanceEphemeral(switchDomain.isDefaultInstanceEphemeral()).setRequest(request).build();
-        
+
+        // 注册实例
         getInstanceOperator().registerInstance(namespaceId, serviceName, instance);
         NotifyCenter.publishEvent(new RegisterInstanceTraceEvent(System.currentTimeMillis(), "",
                 false, namespaceId, NamingUtils.getGroupName(serviceName), NamingUtils.getServiceName(serviceName),
@@ -347,7 +348,7 @@ public class InstanceController {
         String cluster = WebUtils.optional(request, CommonParams.CLUSTER_NAME, UtilsAndCommons.DEFAULT_CLUSTER_NAME);
         String ip = WebUtils.required(request, "ip");
         int port = Integer.parseInt(WebUtils.required(request, "port"));
-        
+        // 获取实例
         com.alibaba.nacos.api.naming.pojo.Instance instance = getInstanceOperator()
                 .getInstance(namespaceId, serviceName, cluster, ip, port);
         ObjectNode result = JacksonUtils.createEmptyJsonNode();
@@ -403,6 +404,7 @@ public class InstanceController {
                 serviceName, namespaceId);
         BeatInfoInstanceBuilder builder = BeatInfoInstanceBuilder.newBuilder();
         builder.setRequest(request);
+        // 处理客户端心跳
         int resultCode = getInstanceOperator()
                 .handleBeat(namespaceId, serviceName, ip, port, clusterName, clientBeat, builder);
         result.put(CommonParams.CODE, resultCode);
