@@ -18,11 +18,11 @@
 
     <!--功能接口：根据用户id查询该用户默认简历的公开状态-->
     <dependencies>
-        <dependency>
+        <!--<dependency>
             <groupId>com.lagou.edu</groupId>
             <artifactId>lagou-service-common</artifactId>
             <version>1.0-SNAPSHOT</version>
-        </dependency>
+        </dependency>-->
 
 
         <!--nacos service discovery client依赖-->
