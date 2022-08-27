@@ -308,7 +308,7 @@ public class InstanceOperatorServiceImpl implements InstanceOperator {
             clientBeat.setPort(port);
             clientBeat.setCluster(cluster);
         }
-        // 处理客户端心跳
+        // 执行处理客户端心跳线程
         service.processClientBeat(clientBeat);
         return NamingResponseCode.OK;
     }
