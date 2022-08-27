@@ -172,6 +172,7 @@ public class InstanceOperatorServiceImpl implements InstanceOperator {
         // now try to enable the push
         try {
             if (subscriber.getPort() > 0 && pushService.canEnablePush(subscriber.getAgent())) {
+                // 添加客户信息
                 subscriberServiceV1.addClient(namespaceId, serviceName, cluster, subscriber.getAgent(),
                         new InetSocketAddress(clientIP, subscriber.getPort()), pushDataSource, StringUtils.EMPTY,
                         StringUtils.EMPTY);

@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/autodeliver")
 public class AutodeliverController {
 
-
     @Autowired
     private ResumeServiceFeignClient resumeServiceFeignClient;
 
