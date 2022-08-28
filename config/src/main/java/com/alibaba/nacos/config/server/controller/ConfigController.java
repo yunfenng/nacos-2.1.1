@@ -353,12 +353,13 @@ public class ConfigController {
             throw new IllegalArgumentException("invalid probeModify");
         }
         
-        // do long-polling
+        // do long-polling 处理长轮询
         inner.doPollingConfig(request, response, clientMd5Map, probeModify.length());
     }
     
     /**
      * Subscribe to configured client information.
+     * 订阅配置的客户端信息
      */
     @GetMapping("/listener")
     @Secured(action = ActionTypes.READ, signType = SignType.CONFIG)

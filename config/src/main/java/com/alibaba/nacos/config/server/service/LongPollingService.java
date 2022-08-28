@@ -243,7 +243,8 @@ public class LongPollingService {
         String appName = req.getHeader(RequestUtil.CLIENT_APPNAME_HEADER);
         String tag = req.getHeader("Vipserver-Tag");
         int delayTime = SwitchService.getSwitchInteger(SwitchService.FIXED_DELAY_TIME, 500);
-        
+
+        // 提前500ms返回响应，为避免客户端超时
         // Add delay time for LoadBalance, and one response is returned 500 ms in advance to avoid client timeout.
         long timeout = Math.max(10000, Long.parseLong(str) - delayTime);
         if (isFixedPolling()) {
@@ -268,6 +269,7 @@ public class LongPollingService {
         String ip = RequestUtil.getRemoteIp(req);
         
         // Must be called by http thread, or send response.
+        // 一定要由Http线程调用，否则离开后容器会立即发送响应
         final AsyncContext asyncContext = req.startAsync();
         
         // AsyncContext.setTimeout() is incorrect, Control by oneself
@@ -396,7 +398,7 @@ public class LongPollingService {
                 try {
                     getRetainIps().put(ClientLongPolling.this.ip, System.currentTimeMillis());
 
-                    // Delete subscriber's relations.
+                    // Delete subscriber's relations. 删除订阅关系
                     boolean removeFlag = allSubs.remove(ClientLongPolling.this);
 
                     if (removeFlag) {
@@ -434,7 +436,7 @@ public class LongPollingService {
         
         void sendResponse(List<String> changedGroups) {
             
-            // Cancel time out task.
+            // Cancel time out task. 取消超时任务
             if (null != asyncTimeoutFuture) {
                 asyncTimeoutFuture.cancel(false);
             }
